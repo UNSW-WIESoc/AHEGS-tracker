@@ -1,0 +1,74 @@
+@import 'tailwindcss';
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-border: var(--border);
+  --color-ring: var(--ring);
+  --radius-sm: calc(var(--radius) - 2px);
+  --radius-md: var(--radius);
+  --radius-lg: calc(var(--radius) + 4px);
+}
+
+:root {
+  --background: #f5f7fd;
+  --foreground: #1e1f3a;
+  --card: #ffffff;
+  --card-foreground: #1e1f3a;
+  --primary: #9396d4;
+  --primary-foreground: #ffffff;
+  --secondary: #b9d0ee;
+  --secondary-foreground: #1e1f3a;
+  --muted: #eef1fb;
+  --muted-foreground: #6b6f9e;
+  --accent: #9396d4;
+  --accent-foreground: #ffffff;
+  --border: #dde2f5;
+  --ring: #9396d4;
+  --radius: 10px;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  background-color: var(--background);
+  color: var(--foreground);
+  font-family: 'Inter', 'DM Sans', system-ui, sans-serif;
+  margin: 0;
+}
+
+/* Hide scrollbars by default, show on hover */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: var(--muted-foreground); }
+
+@keyframes progress-fill {
+  from { width: 0%; }
+  to { width: var(--progress-target); }
+}
+
+@keyframes fade-in {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-fade-in {
+  animation: fade-in 0.35s ease both;
+}
+
+.progress-bar-animated {
+  animation: progress-fill 1.2s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
