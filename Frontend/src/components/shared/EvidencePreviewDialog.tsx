@@ -1,12 +1,13 @@
-import { X, FileText, Image } from 'lucide-react'
+import { X } from 'lucide-react'
 
 interface Props {
   filename: string
-  fileType: 'image' | 'pdf'
+  fileType: 'image'
+  imageData: string
   onClose: () => void
 }
 
-export default function EvidencePreviewDialog({ filename, fileType, onClose }: Props) {
+export default function EvidencePreviewDialog({ filename, imageData, onClose }: Props) {
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4" style={{ background: 'rgba(30,31,58,0.5)' }} onClick={onClose}>
       <div className="w-full max-w-lg rounded-2xl shadow-2xl overflow-hidden animate-fade-in" style={{ background: '#fff' }} onClick={e => e.stopPropagation()}>
@@ -16,24 +17,8 @@ export default function EvidencePreviewDialog({ filename, fileType, onClose }: P
             <X size={18} />
           </button>
         </div>
-        <div className="p-8 flex flex-col items-center justify-center min-h-48" style={{ background: '#f5f7fd' }}>
-          {fileType === 'image' ? (
-            <div className="flex flex-col items-center gap-3">
-              <div className="w-32 h-32 rounded-xl flex items-center justify-center" style={{ background: 'linear-gradient(135deg, #e8eaf8, #d4ddf5)' }}>
-                <Image size={48} style={{ color: '#9396d4' }} />
-              </div>
-              <p className="text-sm font-medium" style={{ color: '#1e1f3a' }}>{filename}</p>
-              <p className="text-xs" style={{ color: '#9396d4' }}>Image preview (demo mode)</p>
-            </div>
-          ) : (
-            <div className="flex flex-col items-center gap-3">
-              <div className="w-32 h-32 rounded-xl flex items-center justify-center" style={{ background: 'linear-gradient(135deg, #e8eaf8, #d4ddf5)' }}>
-                <FileText size={48} style={{ color: '#9396d4' }} />
-              </div>
-              <p className="text-sm font-medium" style={{ color: '#1e1f3a' }}>{filename}</p>
-              <p className="text-xs" style={{ color: '#9396d4' }}>PDF preview (demo mode)</p>
-            </div>
-          )}
+        <div className="flex items-center justify-center" style={{ background: '#f5f7fd' }}>
+          <img src={imageData} alt={filename} className="max-h-[70vh] w-full object-contain" />
         </div>
       </div>
     </div>

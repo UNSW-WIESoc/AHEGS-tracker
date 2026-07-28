@@ -157,7 +157,7 @@ export default function UserDashboard({ user, evidence, onAddEvidence, onNavigat
                         <button onClick={() => setPreview(ev)}
                           className="flex items-center gap-1.5 text-xs font-medium hover:opacity-70 transition-opacity"
                           style={{ color: '#9396d4' }}>
-                          <Paperclip size={13} /> {ev.evidenceFile}
+                          <Paperclip size={13} /> View
                         </button>
                       </td>
                       <td className="px-6 py-4"><StatusBadge status={ev.status} /></td>
@@ -172,8 +172,9 @@ export default function UserDashboard({ user, evidence, onAddEvidence, onNavigat
 
       {preview && (
         <EvidencePreviewDialog
-          filename={preview.evidenceFile}
-          fileType={preview.evidenceType}
+          filename={preview.evidenceFile} 
+          fileType="image"
+          imageData={preview.evidenceFile}
           onClose={() => setPreview(null)}
         />
       )}

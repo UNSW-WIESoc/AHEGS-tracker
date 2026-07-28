@@ -2,7 +2,7 @@ import { useState } from "react";
 import type { Page } from "../../types";
 import WiesocLogo from "../shared/WiesocLogo";
 import {
-  User,
+  User as UserIcon,
   Hash,
   Mail,
   Lock,
@@ -10,6 +10,10 @@ import {
   Eye,
   EyeOff,
 } from "lucide-react";
+
+import { auth, db } from "../../firebase";
+import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
+import { doc, setDoc } from "firebase/firestore";
 
 interface Props {
   onLogin: () => void;
@@ -76,13 +80,12 @@ export default function RegisterPage({
   });
   const [showPass, setShowPass] = useState(false);
   const [error, setError] = useState("");
+  const [submitting, setSubmitting] = useState(false);
 
   const set =
     (k: keyof typeof form) =>
     (
-      e: React.ChangeEvent<
-        HTMLInputElement | HTMLSelectElement
-      >,
+      e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
     ) =>
       setForm((f) => ({ ...f, [k]: e.target.value }));
 
@@ -100,17 +103,11 @@ export default function RegisterPage({
     e.target.style.boxShadow = "none";
   };
 
-  const submit = (e: React.FormEvent) => {
+  const submit = async (e: React.FormEvent) => {
     e.preventDefault();
-    const { fullName, studentId, email, password, degree } =
-      form;
-    if (
-      !fullName ||
-      !studentId ||
-      !email ||
-      !password ||
-      !degree
-    ) {
+    const { fullName, studentId, email, password, degree } = form;
+
+    if (!fullName || !studentId || !email || !password || !degree) {
       setError("Please fill in all fields.");
       return;
     }
@@ -118,8 +115,40 @@ export default function RegisterPage({
       setError("Password must be at least 8 characters.");
       return;
     }
+
     setError("");
-    onLogin();
+    setSubmitting(true);
+
+    try {
+      const credential = await createUserWithEmailAndPassword(auth, email, password);
+      const firebaseUser = credential.user;
+
+      await updateProfile(firebaseUser, { displayName: fullName });
+
+      await setDoc(doc(db, "users", firebaseUser.uid), {
+        id: firebaseUser.uid,
+        fullName,
+        studentId,
+        email,
+        degree,
+        role: "student",
+      });
+
+      onLogin();
+    } catch (err: any) {
+      console.error(err);
+      if (err.code === "auth/email-already-in-use") {
+        setError("An account with that email already exists.");
+      } else if (err.code === "auth/invalid-email") {
+        setError("That email address looks invalid.");
+      } else if (err.code === "auth/weak-password") {
+        setError("Password is too weak. Use at least 8 characters.");
+      } else {
+        setError("Something went wrong creating your account. Please try again.");
+      }
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   return (
@@ -166,7 +195,7 @@ export default function RegisterPage({
           )}
 
           <form onSubmit={submit} className="space-y-4">
-            <Field label="Full name" icon={User}>
+            <Field label="Full name" icon={UserIcon}>
               <input
                 type="text"
                 value={form.fullName}
@@ -264,13 +293,14 @@ export default function RegisterPage({
 
             <button
               type="submit"
-              className="w-full py-3 rounded-xl font-semibold text-sm text-white transition-all hover:opacity-90 active:scale-[0.98] mt-2"
+              disabled={submitting}
+              className="w-full py-3 rounded-xl font-semibold text-sm text-white transition-all hover:opacity-90 active:scale-[0.98] mt-2 disabled:opacity-60"
               style={{
                 background:
                   "linear-gradient(135deg, #9396d4, #7b7fc4)",
               }}
             >
-              Create account
+              {submitting ? "Creating account..." : "Create account"}
             </button>
           </form>
 

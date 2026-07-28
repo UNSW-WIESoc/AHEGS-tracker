@@ -1,6 +1,7 @@
 import { useState, useRef } from 'react'
 import type { Evidence, EvidenceCategory } from '../../types'
 import { X, Upload, Calendar, Clock, Tag, FileText } from 'lucide-react'
+import { compressImage } from '../../lib/compressImage.ts'
 
 const CATEGORIES: EvidenceCategory[] = ['Meeting', 'Networking', 'Society Event', 'Workshop', 'Conference', 'Volunteering', 'Other']
 
@@ -25,33 +26,63 @@ const blurFn = (e: React.FocusEvent<HTMLInputElement | HTMLSelectElement | HTMLT
 export default function AddEvidenceDialog({ studentId, studentName, onAdd, onClose }: Props) {
   const [form, setForm] = useState({ eventName: '', eventDate: '', hours: '', category: '' as EvidenceCategory | '' })
   const [file, setFile] = useState<File | null>(null)
+  const [preview, setPreview] = useState<string>('')
   const [error, setError] = useState('')
+  const [submitting, setSubmitting] = useState(false)
   const fileRef = useRef<HTMLInputElement>(null)
 
   const set = (k: keyof typeof form) => (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) =>
     setForm(f => ({ ...f, [k]: e.target.value }))
 
-  const submit = (e: React.FormEvent) => {
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const selected = e.target.files?.[0] ?? null
+    if (selected && !selected.type.startsWith('image/')) {
+      setError('Please upload an image file (jpg, png, etc).')
+      setFile(null)
+      return
+    }
+    if (selected && selected.size > 20 * 1024 * 1024) {
+      setError('That image is too large. Please choose a smaller file.')
+      setFile(null)
+      return
+    }
+    setError('')
+    setFile(selected)
+    setPreview(selected ? URL.createObjectURL(selected) : '')
+  }
+
+  const submit = async (e: React.FormEvent) => {
     e.preventDefault()
     if (!form.eventName || !form.eventDate || !form.hours || !form.category || !file) {
       setError('Please fill in all fields and upload evidence.')
       return
     }
-    const evidence: Evidence = {
-      id: `e-${Date.now()}`,
-      studentId,
-      studentName,
-      eventName: form.eventName,
-      eventDate: form.eventDate,
-      hours: parseFloat(form.hours),
-      category: form.category as EvidenceCategory,
-      status: 'pending',
-      evidenceFile: file.name,
-      evidenceType: file.type.includes('pdf') ? 'pdf' : 'image',
-      submittedAt: new Date().toISOString().split('T')[0],
+
+    setSubmitting(true)
+    try {
+      const compressedDataUrl = await compressImage(file)
+
+      const evidence: Evidence = {
+        id: `e-${Date.now()}`,
+        studentId,
+        studentName,
+        eventName: form.eventName,
+        eventDate: form.eventDate,
+        hours: parseFloat(form.hours),
+        category: form.category as EvidenceCategory,
+        status: 'pending',
+        evidenceFile: compressedDataUrl,
+        evidenceType: 'image',
+        submittedAt: new Date().toISOString().split('T')[0],
+      }
+      onAdd(evidence)
+      onClose()
+    } catch (err) {
+      console.error('Error compressing image:', err)
+      setError('Something went wrong processing that image. Try a different file.')
+    } finally {
+      setSubmitting(false)
     }
-    onAdd(evidence)
-    onClose()
   }
 
   return (
@@ -108,13 +139,17 @@ export default function AddEvidenceDialog({ studentId, studentName, onAdd, onClo
 
           <div>
             <label className="block text-sm font-medium mb-1.5" style={{ color: '#1e1f3a' }}>Upload evidence</label>
-            <input ref={fileRef} type="file" accept="image/*,.pdf" className="hidden" onChange={e => setFile(e.target.files?.[0] ?? null)} />
+            <input ref={fileRef} type="file" accept="image/*" className="hidden" onChange={handleFileChange} />
             <button type="button" onClick={() => fileRef.current?.click()}
-              className="w-full py-6 rounded-xl border-2 border-dashed flex flex-col items-center gap-2 transition-all hover:opacity-80"
+              className="w-full py-6 rounded-xl border-2 border-dashed flex flex-col items-center gap-2 transition-all hover:opacity-80 overflow-hidden"
               style={{ borderColor: file ? '#9396d4' : '#dde2f5', background: file ? 'rgba(147,150,212,0.05)' : '#fafbff' }}>
-              <Upload size={20} style={{ color: '#9396d4' }} />
+              {preview ? (
+                <img src={preview} alt="Preview" className="h-20 rounded-lg object-cover" />
+              ) : (
+                <Upload size={20} style={{ color: '#9396d4' }} />
+              )}
               <span className="text-sm" style={{ color: file ? '#9396d4' : '#6b6f9e' }}>
-                {file ? file.name : 'Click to upload image or PDF'}
+                {file ? file.name : 'Click to upload an image'}
               </span>
             </button>
           </div>
@@ -125,10 +160,10 @@ export default function AddEvidenceDialog({ studentId, studentName, onAdd, onClo
               style={{ border: '1.5px solid #dde2f5', color: '#6b6f9e', background: '#fff' }}>
               Cancel
             </button>
-            <button type="submit"
-              className="flex-1 py-3 rounded-xl text-sm font-semibold text-white transition-all hover:opacity-90"
+            <button type="submit" disabled={submitting}
+              className="flex-1 py-3 rounded-xl text-sm font-semibold text-white transition-all hover:opacity-90 disabled:opacity-60"
               style={{ background: 'linear-gradient(135deg, #9396d4, #7b7fc4)' }}>
-              Submit
+              {submitting ? 'Processing...' : 'Submit'}
             </button>
           </div>
         </form>

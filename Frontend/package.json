@@ -1,5 +1,5 @@
 {
-  "name": "figma-make-app",
+  "name": "ahegs-tracker",
   "private": true,
   "version": "1.0.0",
   "type": "module",
@@ -10,6 +10,7 @@
     "format": "oxfmt"
   },
   "dependencies": {
+    "firebase": "^12.16.0",
     "lucide-react": "^1.24.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0"

@@ -27,7 +27,7 @@ export interface Evidence {
   category: EvidenceCategory
   status: EvidenceStatus
   evidenceFile: string // filename or data url
-  evidenceType: 'image' | 'pdf'
+  evidenceType: 'image'
   rejectionReason?: string
   submittedAt: string
 }

@@ -160,7 +160,7 @@ export default function AdminDashboard({ user, evidence, onUpdateEvidence, onNav
       </div>
 
       {preview && (
-        <EvidencePreviewDialog filename={preview.evidenceFile} fileType={preview.evidenceType} onClose={() => setPreview(null)} />
+        <EvidencePreviewDialog filename={preview.eventName} fileType="image" imageData={preview.evidenceFile} onClose={() => setPreview(null)} />
       )}
 
       {/* Reject dialog */}
