@@ -22,6 +22,23 @@ import {
   orderBy
 } from 'firebase/firestore'
 
+function getLoginErrorMessage(error: any): string {
+  switch (error?.code) {
+    case 'auth/invalid-credential':
+    case 'auth/wrong-password':
+    case 'auth/user-not-found':
+      return 'Incorrect email or password.'
+    case 'auth/too-many-requests':
+      return 'Too many attempts. Please try again later.'
+    case 'auth/invalid-email':
+      return 'Please enter a valid email address.'
+    case 'auth/user-disabled':
+      return 'This account has been disabled.'
+    default:
+      return error?.message || 'Login failed'
+  }
+}
+
 export default function App() {
   const [page, setPage] = useState<Page>('login')
   const [currentUser, setCurrentUser] = useState<User | null>(null)
@@ -142,11 +159,9 @@ export default function App() {
   const handleLogin = async (email: string, password: string) => {
     if (password === 'google-authenticated') return
     try {
-      setLoading(true)
       await signInWithEmailAndPassword(auth, email, password)
     } catch (error: any) {
-      alert(error.message || "Login failed")
-      setLoading(false)
+      throw new Error(getLoginErrorMessage(error))
     }
   }
 

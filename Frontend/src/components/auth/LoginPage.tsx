@@ -8,7 +8,7 @@ import { auth } from "../../firebase"; // Double-check this path matches your fo
 import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 
 interface Props {
-  onLogin: (email: string, password: string) => void;
+  onLogin: (email: string, password: string) => void | Promise<void>;
   onNavigate: (p: Page) => void;
 }
 
@@ -21,14 +21,18 @@ export default function LoginPage({
   const [showPass, setShowPass] = useState(false);
   const [error, setError] = useState("");
 
-  const submit = (e: React.FormEvent) => {
+  const submit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!email || !password) {
       setError("Please fill in all fields.");
       return;
     }
     setError("");
-    onLogin(email, password);
+    try {
+      await onLogin(email, password);
+    } catch (err: any) {
+      setError(err.message || "Login failed.");
+    }
   };
 
   // Google Sign-In Logic with UNSW email validation
