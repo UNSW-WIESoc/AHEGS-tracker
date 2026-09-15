@@ -72,7 +72,6 @@ export default function ProfilePage({ user, onUpdateUser, onNavigate, onLogout }
         <div className="flex items-start justify-between mb-8">
           <div>
             <h1 className="text-2xl font-bold" style={{ color: '#1e1f3a' }}>Profile</h1>
-            <p className="text-sm mt-1" style={{ color: '#6b6f9e' }}>Manage your personal details</p>
           </div>
           {!editing ? (
             <button onClick={() => setEditing(true)}
@@ -139,10 +138,10 @@ export default function ProfilePage({ user, onUpdateUser, onNavigate, onLogout }
               </div>
               <div>
                 <label className="flex items-center gap-1.5 text-xs font-semibold mb-1.5" style={{ color: '#6b6f9e' }}>
-                  <Hash size={13} /> Student ID
+                  <Hash size={13} /> zID
                 </label>
-                <input type="text" value={form.studentId} disabled
-                  className={inputClass} style={{ ...inputStyle, opacity: 0.6 }} />
+                <input type="text" value={form.studentId} disabled={!editing}
+                  className={inputClass} style={inputStyle} onFocus={focusFn} onBlur={blurFn} />
               </div>
             </div>
 
@@ -158,7 +157,7 @@ export default function ProfilePage({ user, onUpdateUser, onNavigate, onLogout }
               <label className="flex items-center gap-1.5 text-xs font-semibold mb-1.5" style={{ color: '#6b6f9e' }}>
                 <Phone size={13} /> Phone number
               </label>
-              <input type="tel" value={form.phone ?? ''} onChange={set('phone')} disabled={!editing} placeholder={editing ? '+61 4XX XXX XXX' : '—'}
+              <input type="tel" value={form.phone ?? ''} onChange={set('phone')} disabled={!editing} placeholder={editing ? '+61 4XX XXX XXX' : ''}
                 className={inputClass} style={inputStyle} onFocus={focusFn} onBlur={blurFn} />
             </div>
 
@@ -190,7 +189,7 @@ export default function ProfilePage({ user, onUpdateUser, onNavigate, onLogout }
               <label className="flex items-center gap-1.5 text-xs font-semibold mb-1.5" style={{ color: '#6b6f9e' }}>
                 <FileText size={13} /> Bio
               </label>
-              <textarea value={form.bio ?? ''} onChange={set('bio')} disabled={!editing} placeholder={editing ? 'Tell us a little about yourself...' : '—'} rows={3}
+              <textarea value={form.bio ?? ''} onChange={set('bio')} disabled={!editing} placeholder={editing ? 'Tell us a little about yourself...' : ''} rows={3}
                 className="w-full px-4 py-3 rounded-xl border text-sm outline-none transition-all resize-none"
                 style={inputStyle} onFocus={focusFn} onBlur={blurFn} />
             </div>
