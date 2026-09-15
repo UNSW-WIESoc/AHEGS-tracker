@@ -60,7 +60,7 @@ export default function App() {
             setCurrentUser(profile)
             setPage(profile.role === 'admin' ? 'admin' : 'dashboard')
           } else {
-            // First-time sign-in (e.g. via Google): auto-create their profile
+            // First-time sign-in: auto-create their profile
             const studentZid = firebaseUser.email?.split('@')[0] || firebaseUser.uid.substring(0, 8)
 
             const defaultProfile: User = {
@@ -155,9 +155,8 @@ export default function App() {
     }
   }
 
-  // Handle password login fallback
+  // Handle password login
   const handleLogin = async (email: string, password: string) => {
-    if (password === 'google-authenticated') return
     try {
       await signInWithEmailAndPassword(auth, email, password)
     } catch (error: any) {
