@@ -209,12 +209,12 @@ export default function RegisterPage({
             </Field>
 
             <div className="grid grid-cols-2 gap-4">
-              <Field label="Student ID" icon={Hash}>
+              <Field label="zID" icon={Hash}>
                 <input
                   type="text"
                   value={form.studentId}
                   onChange={set("studentId")}
-                  placeholder="S012345"
+                  placeholder="z1234567"
                   className="w-full pl-10 pr-4 py-3 rounded-xl border text-sm outline-none transition-all"
                   style={inputStyle}
                   onFocus={focusStyle}
@@ -234,24 +234,6 @@ export default function RegisterPage({
                 />
               </Field>
             </div>
-
-            <Field label="Degree" icon={GraduationCap}>
-              <select
-                value={form.degree}
-                onChange={set("degree")}
-                className="w-full pl-10 pr-4 py-3 rounded-xl border text-sm outline-none transition-all appearance-none"
-                style={inputStyle}
-                onFocus={focusStyle}
-                onBlur={blurStyle}
-              >
-                <option value="">Select your degree</option>
-                {DEGREES.map((d) => (
-                  <option key={d} value={d}>
-                    {d}
-                  </option>
-                ))}
-              </select>
-            </Field>
 
             <div>
               <label
