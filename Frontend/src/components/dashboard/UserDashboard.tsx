@@ -29,8 +29,8 @@ export default function UserDashboard({ user, evidence, onAddEvidence, onNavigat
   const filtered = tab === 'all' ? evidence : evidence.filter(e => e.status === tab)
   const tabs: { key: Tab; label: string; count: number }[] = [
     { key: 'all', label: 'All', count: evidence.length },
-    { key: 'approved', label: 'Approved', count: evidence.filter(e => e.status === 'approved').length },
     { key: 'pending', label: 'Pending', count: evidence.filter(e => e.status === 'pending').length },
+    { key: 'approved', label: 'Approved', count: evidence.filter(e => e.status === 'approved').length },
     { key: 'rejected', label: 'Rejected', count: evidence.filter(e => e.status === 'rejected').length },
   ]
 
