@@ -41,7 +41,7 @@ export default function UserDashboard({ user, evidence, onAddEvidence, onNavigat
         <div className="flex items-start justify-between mb-8">
           <div>
             <h1 className="text-2xl font-bold" style={{ color: '#1e1f3a' }}>
-              Welcome back, {user.fullName.split(' ')[0]} 👋
+              Welcome back, {user.fullName.split(' ')[0]} 
             </h1>
             <p className="text-sm mt-1" style={{ color: '#6b6f9e' }}>Track your volunteering hours progress</p>
           </div>
