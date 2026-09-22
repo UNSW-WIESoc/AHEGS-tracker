@@ -5,7 +5,7 @@ import Layout from '../shared/Layout'
 import StatusBadge from '../shared/StatusBadge'
 import EvidencePreviewDialog from '../shared/EvidencePreviewDialog'
 import AddEvidenceDialog from '../shared/AddEvidenceDialog'
-import { Plus, Paperclip, Clock, CheckCircle, XCircle, AlertCircle } from 'lucide-react'
+import { Plus, Paperclip, Clock, CheckCircle, AlertCircle, CircleQuestionMark } from 'lucide-react'
 
 interface Props {
   user: User
@@ -41,7 +41,7 @@ export default function UserDashboard({ user, evidence, onAddEvidence, onNavigat
         <div className="flex items-start justify-between mb-8">
           <div>
             <h1 className="text-2xl font-bold" style={{ color: '#1e1f3a' }}>
-              Welcome back, {user.fullName.split(' ')[0]} 👋
+              Welcome back, {user.fullName.split(' ')[0]} 
             </h1>
             <p className="text-sm mt-1" style={{ color: '#6b6f9e' }}>Track your volunteering hours progress</p>
           </div>
@@ -59,9 +59,9 @@ export default function UserDashboard({ user, evidence, onAddEvidence, onNavigat
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
           {[
             { label: 'Completed', value: `${approvedHours}h`, icon: CheckCircle, color: '#16a34a', bg: '#f0fdf4' },
-            { label: 'Required', value: `${REQUIRED_HOURS}h`, icon: Clock, color: '#9396d4', bg: 'rgba(147,150,212,0.08)' },
-            { label: 'Remaining', value: `${Math.max(REQUIRED_HOURS - approvedHours, 0)}h`, icon: AlertCircle, color: '#d97706', bg: '#fffbeb' },
-            { label: 'Pending', value: `${pendingHours}h`, icon: XCircle, color: '#6b6f9e', bg: '#f5f7fd' },
+            { label: 'Required', value: `${REQUIRED_HOURS}h`, icon: AlertCircle, color: '#c73640', bg: '#ffebeb' },
+            { label: 'Remaining', value: `${Math.max(REQUIRED_HOURS - approvedHours, 0)}h`, icon: CircleQuestionMark, color: '#d97706', bg: '#fffbeb' },
+            { label: 'Pending', value: `${pendingHours}h`, icon: Clock, color: '#6b6f9e', bg: '#f5f7fd' },
           ].map(({ label, value, icon: Icon, color, bg }) => (
             <div key={label} className="rounded-2xl p-4" style={{ background: '#fff', border: '1px solid #eef1fb' }}>
               <div className="flex items-center justify-between mb-2">
