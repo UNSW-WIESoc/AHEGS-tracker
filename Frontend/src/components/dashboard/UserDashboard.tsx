@@ -45,14 +45,6 @@ export default function UserDashboard({ user, evidence, onAddEvidence, onNavigat
             </h1>
             <p className="text-sm mt-1" style={{ color: '#6b6f9e' }}>Track your volunteering hours progress</p>
           </div>
-          <button
-            onClick={() => setShowAdd(true)}
-            className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-semibold text-white transition-all hover:opacity-90 active:scale-[0.98]"
-            style={{ background: 'linear-gradient(135deg, #9396d4, #7b7fc4)' }}
-          >
-            <Plus size={16} />
-            Add evidence
-          </button>
         </div>
 
         {/* Stats row */}
@@ -79,7 +71,6 @@ export default function UserDashboard({ user, evidence, onAddEvidence, onNavigat
         <div className="rounded-2xl p-6 mb-6" style={{ background: '#fff', border: '1px solid #eef1fb' }}>
           <div className="flex items-center justify-between mb-3">
             <div>
-              <h2 className="font-semibold text-sm" style={{ color: '#1e1f3a' }}>Progress toward {REQUIRED_HOURS}h target</h2>
               <p className="text-xs mt-0.5" style={{ color: '#6b6f9e' }}>
                 {approvedHours}h completed · {Math.max(REQUIRED_HOURS - approvedHours, 0)}h remaining
               </p>
@@ -106,7 +97,15 @@ export default function UserDashboard({ user, evidence, onAddEvidence, onNavigat
         {/* Evidence table */}
         <div className="rounded-2xl" style={{ background: '#fff', border: '1px solid #eef1fb' }}>
           <div className="flex items-center justify-between px-6 pt-5 pb-0">
-            <h2 className="font-semibold text-sm" style={{ color: '#1e1f3a' }}>Evidence submissions</h2>
+            <h2 className="font-semibold text-md" style={{ color: '#1e1f3a' }}>Evidence submissions</h2>
+            <button
+              onClick={() => setShowAdd(true)}
+              className="flex items-center gap-2 px-4 py-1.5 rounded-xl text-sm font-semibold text-white transition-all hover:opacity-90 active:scale-[0.98]"
+              style={{ background: 'linear-gradient(135deg, #9396d4, #7b7fc4)' }}
+            >
+              <Plus size={16} />
+              Add evidence
+            </button>
           </div>
 
           {/* Tabs */}
