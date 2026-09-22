@@ -157,32 +157,60 @@ export default function LoginPage({
 
           <form onSubmit={submit} className="space-y-4">
             <div>
-              <label className="block text-sm font-medium mb-1.5" style={{ color: "#1e1f3a" }}>Email address</label>
+              <label className="block text-sm font-medium mb-1.5" style={{ color: "#1e1f3a" }}>
+                Email address
+              </label>
               <div className="relative">
                 <Mail size={16} className="absolute left-3 top-1/2 -translate-y-1/2" style={{ color: "#9396d4" }} />
-                <input type="email" value={email} onChange={(e) => setEmail(e.target.value)}
+                <input 
+                  type="email" 
+                  value={email} 
+                  onChange={(e) => setEmail(e.target.value)}
                   placeholder={current.placeholder}
                   className="w-full pl-10 pr-4 py-3 rounded-xl border text-sm outline-none transition-all"
                   style={{ border: "1.5px solid #dde2f5", background: "#fff", color: "#1e1f3a" }}
-                  onFocus={focusFn} onBlur={blurFn} />
+                  onFocus={focusFn} 
+                  onBlur={blurFn} 
+                />
               </div>
             </div>
 
             <div>
               <div className="flex justify-between items-center mb-1.5">
-                <label className="block text-sm font-medium" style={{ color: "#1e1f3a" }}>Password</label>
-                <button type="button" onClick={() => onNavigate("forgot-password")} className="text-sm font-medium" style={{ color: "#9396d4" }}>
+                <label className="block text-sm font-medium" style={{ color: "#1e1f3a" }}>
+                  Password
+                </label>
+                <button 
+                  type="button" 
+                  onClick={() => onNavigate("forgot-password")} 
+                  className="text-sm font-medium" 
+                  style={{ color: "#9396d4" }}
+                >
                   Forgot password?
                 </button>
               </div>
               <div className="relative">
-                <Lock size={16} className="absolute left-3 top-1/2 -translate-y-1/2" style={{ color: "#9396d4" }} />
-                <input type={showPass ? "text" : "password"} value={password} onChange={(e) => setPassword(e.target.value)}
+                <Lock 
+                  size={16} 
+                  className="absolute left-3 top-1/2 -translate-y-1/2" 
+                  style={{ color: "#9396d4" }} 
+                />
+                <input 
+                  type={showPass ? "text" : "password"} 
+                  value={password} 
+                  onChange={(e) => setPassword(e.target.value)}
                   placeholder="Enter your password"
                   className="w-full pl-10 pr-10 py-3 rounded-xl border text-sm outline-none transition-all"
                   style={{ border: "1.5px solid #dde2f5", background: "#fff", color: "#1e1f3a" }}
-                  onFocus={focusFn} onBlur={blurFn} />
-                <button type="button" onClick={() => setShowPass(!showPass)} className="absolute right-3 top-1/2 -translate-y-1/2" style={{ color: "#9396d4" }}>
+                  onFocus={focusFn} 
+                  onBlur={blurFn} 
+                />
+                <button 
+                  type="button" 
+                  onClick={() => setShowPass(!showPass)} 
+                  className="absolute right-3 top-1/2 -translate-y-1/2" 
+                  style={{ color: "#9396d4" }}
+                >
                   {showPass ? <EyeOff size={16} /> : <Eye size={16} />}
                 </button>
               </div>
@@ -190,7 +218,8 @@ export default function LoginPage({
 
             <button type="submit"
               className="w-full py-3 rounded-xl font-semibold text-sm text-white transition-all hover:opacity-90 active:scale-[0.98] mt-2"
-              style={{ background: "linear-gradient(135deg, #9396d4, #7b7fc4)" }}>
+              style={{ background: "linear-gradient(135deg, #9396d4, #7b7fc4)" }}
+            >
               Sign in
             </button>
           </form>
@@ -198,13 +227,25 @@ export default function LoginPage({
           {role === "student" && (
             <p className="text-center mt-6 text-sm" style={{ color: "#6b6f9e" }}>
               {"Don't have an account? "}
-              <button onClick={() => onNavigate("register")} className="font-semibold" style={{ color: "#9396d4" }}>Sign up</button>
+              <button 
+                onClick={() => onNavigate("register")} 
+                className="font-semibold" 
+                style={{ color: "#9396d4" }}
+              >
+                Sign up
+              </button>
             </p>
           )}
           {role === "mentor" && (
             <p className="text-center mt-6 text-sm" style={{ color: "#6b6f9e" }}>
               New mentor?{" "}
-              <button onClick={() => onNavigate("register")} className="font-semibold" style={{ color: "#9396d4" }}>Register here</button>
+              <button 
+                onClick={() => onNavigate("register")} 
+                className="font-semibold" 
+                style={{ color: "#9396d4" }}
+              >
+                Register here
+              </button>
             </p>
           )}
         </div>

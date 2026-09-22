@@ -46,9 +46,12 @@ export default function App() {
   const [loading, setLoading] = useState(true);
   const [authError, setAuthError] = useState<string>('');
 
-  // Tracks which role the user selected on the login form, so the
-  // auth-state listener can validate it once sign-in completes.
+  // Tracks which role the user selected on the login form, so the auth-state 
+  // listener can validate it once sign-in completes.
   const pendingRoleRef = useRef<Role | null>(null)
+  // track registering so the auth-state listener can validate it once account 
+  // creation completes.
+  const isRegisteringRef = useRef(false)
 
   const navigate = (p: Page) => setPage(p);
   
@@ -58,6 +61,11 @@ export default function App() {
     const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
       try {
         if (firebaseUser) {
+          // Registration is handling its own sign-up flow — let it finish.
+          if (isRegisteringRef.current) {
+            setLoading(false)
+            return
+          }
           const userDocRef = doc(db, 'users', firebaseUser.uid)
           const userDocSnap = await getDoc(userDocRef)
 
@@ -85,20 +93,15 @@ export default function App() {
             setCurrentUser(profile)
             setPage(profile.role === 'admin' ? 'admin' : 'dashboard')
           } else {
-            // First-time sign-in: auto-create their profile
-            const studentZid = firebaseUser.email?.split('@')[0] || firebaseUser.uid.substring(0, 8)
-            const defaultProfile: User = {
-              id: firebaseUser.uid,
-              email: firebaseUser.email || '',
-              fullName: firebaseUser.displayName || 'New Student',
-              role: 'student',
-              studentId: studentZid,
-              degree: '',
-              yearOfStudy: 1,
-            }
-            await setDoc(userDocRef, defaultProfile)
-            setCurrentUser(defaultProfile)
-            setPage('dashboard')
+            // No profile doc found, something went wrong
+            await signOut(auth)
+            setCurrentUser(null)
+            setEvidence([])
+            setPage('login')
+            pendingRoleRef.current = null
+            setAuthError('No account record found. Please register or contact support.')
+            setLoading(false)
+            return
           }
         } else {
           setCurrentUser(null)
@@ -204,15 +207,34 @@ export default function App() {
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-[#f0f2fc]">
-        <p className="text-[#9396d4] font-semibold animate-pulse">Loading WIESOC AHEGS Tracker...</p>
+        <p className="text-[#9396d4] font-semibold animate-pulse">
+          Loading WIESOC AHEGS Tracker...
+        </p>
       </div>
     )
   }
 
   if (!currentUser) {
-    if (page === 'register') return <RegisterPage onLogin={() => navigate('login')} onNavigate={navigate} />
-    if (page === 'forgot-password') return <ForgotPasswordPage onNavigate={navigate} />
-    return <LoginPage onLogin={handleLogin} onNavigate={navigate} authError={authError} setAuthError={setAuthError} />
+    if (page === 'register') 
+      return <RegisterPage 
+        onNavigate={navigate} 
+        onRegisterStart={() => { isRegisteringRef.current = true }}
+        onRegisterComplete={(profile: User) => {
+          isRegisteringRef.current = false
+          setCurrentUser(profile)
+          setPage(profile.role === 'admin' ? 'admin' : 'dashboard')
+        }}
+        onRegisterError={() => { isRegisteringRef.current = false }}
+      />
+    if (page === 'forgot-password') 
+      return <ForgotPasswordPage onNavigate={navigate} />
+    
+    return <LoginPage 
+      onLogin={handleLogin} 
+      onNavigate={navigate} 
+      authError={authError} 
+      setAuthError={setAuthError} 
+    />
   }
 
   if (page === 'profile') {
