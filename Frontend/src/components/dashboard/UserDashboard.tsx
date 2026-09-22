@@ -84,8 +84,9 @@ export default function UserDashboard({ user, evidence, onAddEvidence, onNavigat
                 '--progress-target': `${pct}%`,
                 width: `${pct}%`,
                 background: pct >= 100
-                  ? 'linear-gradient(90deg, #16a34a, #4ade80)'
-                  : 'linear-gradient(90deg, #9396d4, #b9d0ee)',
+                  ? '#4ebc76'
+                  : '#9396d4',
+                  // 'linear-gradient(90deg, #9396d4, #b9d0ee)',
               } as React.CSSProperties}
             />
           </div>
@@ -101,7 +102,7 @@ export default function UserDashboard({ user, evidence, onAddEvidence, onNavigat
             <button
               onClick={() => setShowAdd(true)}
               className="flex items-center gap-2 px-4 py-1.5 rounded-xl text-sm font-semibold text-white transition-all hover:opacity-90 active:scale-[0.98]"
-              style={{ background: 'linear-gradient(135deg, #9396d4, #7b7fc4)' }}
+              style={{ background: '#9396d4' }}
             >
               <Plus size={16} />
               Add evidence

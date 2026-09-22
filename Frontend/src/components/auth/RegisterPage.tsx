@@ -155,8 +155,8 @@ export default function RegisterPage({
     <div
       className="min-h-screen flex items-center justify-center p-6"
       style={{
-        background:
-          "linear-gradient(160deg, #9396d4 0%, #7b7fc4 60%, #b9d0ee 100%)",
+        background: "#9396d4"
+          // "linear-gradient(160deg, #9396d4 0%, #7b7fc4 60%, #b9d0ee 100%)",
       }}
     >
       <div className="w-full max-w-lg animate-fade-in">
@@ -209,12 +209,12 @@ export default function RegisterPage({
             </Field>
 
             <div className="grid grid-cols-2 gap-4">
-              <Field label="Student ID" icon={Hash}>
+              <Field label="zID" icon={Hash}>
                 <input
                   type="text"
                   value={form.studentId}
                   onChange={set("studentId")}
-                  placeholder="S012345"
+                  placeholder="z1234567"
                   className="w-full pl-10 pr-4 py-3 rounded-xl border text-sm outline-none transition-all"
                   style={inputStyle}
                   onFocus={focusStyle}
@@ -234,24 +234,6 @@ export default function RegisterPage({
                 />
               </Field>
             </div>
-
-            <Field label="Degree" icon={GraduationCap}>
-              <select
-                value={form.degree}
-                onChange={set("degree")}
-                className="w-full pl-10 pr-4 py-3 rounded-xl border text-sm outline-none transition-all appearance-none"
-                style={inputStyle}
-                onFocus={focusStyle}
-                onBlur={blurStyle}
-              >
-                <option value="">Select your degree</option>
-                {DEGREES.map((d) => (
-                  <option key={d} value={d}>
-                    {d}
-                  </option>
-                ))}
-              </select>
-            </Field>
 
             <div>
               <label
@@ -296,8 +278,8 @@ export default function RegisterPage({
               disabled={submitting}
               className="w-full py-3 rounded-xl font-semibold text-sm text-white transition-all hover:opacity-90 active:scale-[0.98] mt-2 disabled:opacity-60"
               style={{
-                background:
-                  "linear-gradient(135deg, #9396d4, #7b7fc4)",
+                background: "#9396d4"
+                  // "linear-gradient(135deg, #9396d4, #7b7fc4)",
               }}
             >
               {submitting ? "Creating account..." : "Create account"}
