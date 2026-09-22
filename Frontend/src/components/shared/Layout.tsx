@@ -11,7 +11,7 @@ interface Props {
   children: React.ReactNode
 }
 
-const SIDEBAR_BG = 'linear-gradient(180deg, #9396d4 0%, #8aa4d6 100%)'
+const SIDEBAR_BG = 'linear-gradient(160deg, #9396d4 0%, #a3b5df 100%)'
 
 export default function Layout({ user, currentPage, onNavigate, onLogout, children }: Props) {
   const [mobileOpen, setMobileOpen] = useState(false)
