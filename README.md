@@ -26,7 +26,10 @@ pnpm dev
 
 ## Deployment
 
+### Manual deployment
+
 ```bash
+cd Frontend
 pnpm build
 firebase deploy --only hosting
 ```
