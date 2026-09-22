@@ -17,10 +17,17 @@ export default function LoginPage({
   const [showPass, setShowPass] = useState(false);
   const [error, setError] = useState("");
 
+  const emailRegex = /^z[0-9]{7}@ad\.unsw\.edu\.au$/;
+  const isEmailValid = emailRegex.test(email);
+
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!email || !password) {
       setError("Please fill in all fields.");
+      return;
+    }
+    if (!isEmailValid) {
+      setError("Please enter a valid UNSW email address (e.g. z1234567@ad.unsw.edu.au).");
       return;
     }
     setError("");
@@ -52,25 +59,21 @@ export default function LoginPage({
           <h1 className="text-4xl font-bold leading-tight mb-4">
             Track your
             <br />
-            volunteering journey
+            AHEGS progress
           </h1>
           <p className="text-white/70 text-lg">
             Log events, submit evidence, and watch your progress
-            grow toward your goal.
+            toward your goal.
           </p>
         </div>
         <div className="flex gap-3">
-          {[0, 1, 2].map((i) => (
-            <div
-              key={i}
-              className="h-1.5 rounded-full"
-              style={{
-                width: i === 0 ? 32 : 12,
-                background:
-                  i === 0 ? "white" : "rgba(255,255,255,0.35)",
-              }}
-            />
-          ))}
+          <div
+            className="h-1.5 rounded-full"
+            style={{
+              width: 72,
+              background:"rgba(255,255,255,0.35)",
+            }}
+           />
         </div>
       </div>
 
@@ -87,7 +90,7 @@ export default function LoginPage({
             Welcome back
           </h2>
           <p className="mb-8" style={{ color: "#6b6f9e" }}>
-            Sign in to your WIESOC account
+            Log in to your WIESOC account
           </p>
 
           {error && (
@@ -103,7 +106,7 @@ export default function LoginPage({
             </div>
           )}
 
-          <form onSubmit={submit} className="space-y-4">
+          <form onSubmit={submit} noValidate className="space-y-4">
             <div>
               <label
                 className="block text-sm font-medium mb-1.5"
@@ -121,7 +124,7 @@ export default function LoginPage({
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  placeholder="you@uni.edu"
+                  placeholder="zID@ad.unsw.edu.au"
                   className="w-full pl-10 pr-4 py-3 rounded-xl border text-sm outline-none transition-all"
                   style={{
                     border: "1.5px solid #dde2f5",
@@ -139,12 +142,6 @@ export default function LoginPage({
                   }}
                 />
               </div>
-              <p
-                className="text-xs mt-1"
-                style={{ color: "#9396d4" }}
-              >
-                Demo: aisha.patel@uni.edu or admin@wiesoc.edu
-              </p>
             </div>
 
             <div>
@@ -214,7 +211,7 @@ export default function LoginPage({
                   "linear-gradient(135deg, #9396d4, #7b7fc4)",
               }}
             >
-              Sign in
+              Log in
             </button>
           </form>
 
