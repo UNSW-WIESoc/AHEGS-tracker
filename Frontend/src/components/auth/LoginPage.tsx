@@ -4,8 +4,10 @@ import WiesocLogo from "../shared/WiesocLogo";
 import { Mail, Lock, Eye, EyeOff, GraduationCap, Shield, Users } from "lucide-react";
 
 interface Props {
-  onLogin: (email: string, password: string) => void | Promise<void>;
+  onLogin: (email: string, password: string, role: Role) => void | Promise<void>;
   onNavigate: (p: Page) => void;
+  authError: string;
+  setAuthError: (s: string) => void
 }
 
 type Role = "student" | "admin" | "mentor";
@@ -19,6 +21,8 @@ const TABS: { role: Role; label: string; icon: React.ElementType; placeholder: s
 export default function LoginPage({
   onLogin,
   onNavigate,
+  authError,
+  setAuthError
 }: Props) {
   const [role, setRole] = useState<Role>("student");
   const [email, setEmail] = useState("");
@@ -26,7 +30,15 @@ export default function LoginPage({
   const [showPass, setShowPass] = useState(false);
   const [error, setError] = useState("");
 
-  const switchRole = (r: Role) => { setRole(r); setEmail(""); setPassword(""); setError(""); };
+  const displayError = error || authError;
+
+  const switchRole = (r: Role) => { 
+    setRole(r); 
+    setEmail(""); 
+    setPassword(""); 
+    setError("");
+    setAuthError("");
+  };
 
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -38,7 +50,7 @@ export default function LoginPage({
 
     setError("");
     try {
-      await onLogin(email, password);
+      await onLogin(email, password, role);
     } catch (err: any) {
       setError(err.message || "Login failed.");
     }
@@ -130,7 +142,7 @@ export default function LoginPage({
             ))}
           </div>
 
-          {error && (
+          {displayError && (
             <div
               className="mb-4 p-3 rounded-lg text-sm"
               style={{
@@ -139,7 +151,7 @@ export default function LoginPage({
                 border: "1px solid #fecaca",
               }}
             >
-              {error}
+              {displayError}
             </div>
           )}
 
