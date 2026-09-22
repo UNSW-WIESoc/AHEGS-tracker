@@ -184,7 +184,9 @@ export default function RegisterPage({
   return (
     <div 
       className="min-h-screen flex items-center justify-center p-6"
-      style={{ background: "linear-gradient(160deg, #9396d4 0%, #7b7fc4 60%, #b9d0ee 100%)" }}
+      style={{
+        background: "linear-gradient(160deg, #9396d4 0%, #a3b5df 100%)",
+      }}
     >
       <div className="w-full max-w-lg animate-fade-in">
         <div className="flex justify-center mb-6">
@@ -193,7 +195,11 @@ export default function RegisterPage({
 
         <div 
           className="rounded-2xl p-8 shadow-xl"
-          style={{ background: "linear-gradient(135deg, #f0f2fc 0%, #e8f0fa 50%, #f5f0fd 100%)", border: "1px solid #eef1fb" }}
+          style={{ 
+            background: "#f0f2fc",
+            //"linear-gradient(135deg, #f0f2fc 0%, #e8f0fa 50%, #f5f0fd 100%)", 
+            border: "1px solid #eef1fb" 
+          }}
         >
 
           <h2 className="text-2xl font-bold mb-1" style={{ color: "#1e1f3a" }}>
@@ -298,8 +304,16 @@ export default function RegisterPage({
                 </Field>
                 <div className="grid grid-cols-2 gap-4">
                   <Field label="Company / Organisation" icon={Building2}>
-                    <input type="text" value={mentorForm.company} onChange={setM("company")} placeholder="e.g. Atlassian"
-                      className={inputClass} style={inputStyle} onFocus={focusFn} onBlur={blurFn} />
+                    <input 
+                      type="text" 
+                      value={mentorForm.company} 
+                      onChange={setM("company")} 
+                      placeholder="e.g. Atlassian"
+                      className={inputClass} 
+                      style={inputStyle} 
+                      onFocus={focusFn} 
+                      onBlur={blurFn} 
+                    />
                   </Field>
                 </div>
               </>
@@ -342,8 +356,11 @@ export default function RegisterPage({
             <button 
               type="submit" 
               disabled={submitting}
-              className="w-full py-3 rounded-xl font-semibold text-sm text-white transition-all hover:opacity-90 active:scale-[0.98] mt-2"
-              style={{ background: "linear-gradient(135deg, #9396d4, #7b7fc4)" }}
+              className="w-full py-3 rounded-xl font-semibold text-sm text-white transition-all hover:opacity-90 active:scale-[0.98] mt-2 disabled:opacity-60"
+              style={{
+                background: "#9396d4"
+                  // "linear-gradient(135deg, #9396d4, #7b7fc4)",
+              }}
             >
               {submitting ? "Creating account..." : "Create account"}
             </button>

@@ -19,7 +19,7 @@ export type EvidenceCategory =
 
 export interface Evidence {
   id: string
-  studentId: string
+  studentId: string | undefined
   studentName: string
   eventName: string
   eventDate: string

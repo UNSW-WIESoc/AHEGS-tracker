@@ -71,16 +71,15 @@ export default function LoginPage({
     <div
       className="min-h-screen flex"
       style={{
-        background:
-          "linear-gradient(135deg, #f0f2fc 0%, #e8f0fa 50%, #f5f0fd 100%)",
+        background: "#f0f2fc"
+          // "linear-gradient(135deg, #f0f2fc 0%, #e8f0fa 50%, #f5f0fd 100%)",
       }}
     >
       {/* Left panel */}
       <div
         className="hidden lg:flex flex-col justify-between w-2/5 p-12"
         style={{
-          background:
-            "linear-gradient(160deg, #9396d4 0%, #7b7fc4 60%, #b9d0ee 100%)",
+          background: "linear-gradient(160deg, #9396d4 0%, #a3b5df 100%)",
         }}
       >
         <WiesocLogo size="lg" tint="#ebf0fc" />
@@ -161,7 +160,11 @@ export default function LoginPage({
                 Email address
               </label>
               <div className="relative">
-                <Mail size={16} className="absolute left-3 top-1/2 -translate-y-1/2" style={{ color: "#9396d4" }} />
+                <Mail 
+                  size={16} 
+                  className="absolute left-3 top-1/2 -translate-y-1/2" 
+                  style={{ color: "#9396d4" }} 
+                />
                 <input 
                   type="email" 
                   value={email} 
@@ -218,7 +221,10 @@ export default function LoginPage({
 
             <button type="submit"
               className="w-full py-3 rounded-xl font-semibold text-sm text-white transition-all hover:opacity-90 active:scale-[0.98] mt-2"
-              style={{ background: "linear-gradient(135deg, #9396d4, #7b7fc4)" }}
+              style={{
+                background: "#9396d4"
+                  // "linear-gradient(135deg, #9396d4, #7b7fc4)",
+              }}
             >
               Sign in
             </button>

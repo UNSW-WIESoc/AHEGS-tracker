@@ -6,7 +6,7 @@ import { compressImage } from '../../lib/compressImage.ts'
 const CATEGORIES: EvidenceCategory[] = ['Meeting', 'Networking', 'Society Event', 'Workshop', 'Conference', 'Volunteering', 'Other']
 
 interface Props {
-  studentId: string
+  studentId: string | undefined
   studentName: string
   onAdd: (e: Evidence) => void
   onClose: () => void
@@ -162,7 +162,7 @@ export default function AddEvidenceDialog({ studentId, studentName, onAdd, onClo
             </button>
             <button type="submit" disabled={submitting}
               className="flex-1 py-3 rounded-xl text-sm font-semibold text-white transition-all hover:opacity-90 disabled:opacity-60"
-              style={{ background: 'linear-gradient(135deg, #9396d4, #7b7fc4)' }}>
+              style={{ background: '#9396d4' }}>
               {submitting ? 'Processing...' : 'Submit'}
             </button>
           </div>
