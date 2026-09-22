@@ -89,7 +89,7 @@ export default function ProfilePage({ user, onUpdateUser, onNavigate, onLogout }
               </button>
               <button onClick={save}
                 className="flex items-center gap-1.5 px-4 py-2.5 rounded-xl text-sm font-semibold text-white"
-                style={{ background: 'linear-gradient(135deg, #9396d4, #7b7fc4)' }}>
+                style={{ background: '#9396d4' }}>
                 <Save size={15} /> Save changes
               </button>
             </div>

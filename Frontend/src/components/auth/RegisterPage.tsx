@@ -155,8 +155,8 @@ export default function RegisterPage({
     <div
       className="min-h-screen flex items-center justify-center p-6"
       style={{
-        background:
-          "linear-gradient(160deg, #9396d4 0%, #7b7fc4 60%, #b9d0ee 100%)",
+        background: "#9396d4"
+          // "linear-gradient(160deg, #9396d4 0%, #7b7fc4 60%, #b9d0ee 100%)",
       }}
     >
       <div className="w-full max-w-lg animate-fade-in">
@@ -296,8 +296,8 @@ export default function RegisterPage({
               disabled={submitting}
               className="w-full py-3 rounded-xl font-semibold text-sm text-white transition-all hover:opacity-90 active:scale-[0.98] mt-2 disabled:opacity-60"
               style={{
-                background:
-                  "linear-gradient(135deg, #9396d4, #7b7fc4)",
+                background: "#9396d4"
+                  // "linear-gradient(135deg, #9396d4, #7b7fc4)",
               }}
             >
               {submitting ? "Creating account..." : "Create account"}
