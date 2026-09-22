@@ -107,7 +107,7 @@ export default function RegisterPage({
     e.preventDefault();
     const { fullName, studentId, email, password, degree } = form;
 
-    if (!fullName || !studentId || !email || !password || !degree) {
+    if (!fullName || !studentId || !email || !password) {
       setError("Please fill in all fields.");
       return;
     }
