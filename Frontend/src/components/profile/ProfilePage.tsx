@@ -68,7 +68,7 @@ export default function ProfilePage({ user, onUpdateUser, onNavigate, onLogout }
 
   return (
     <Layout user={user} currentPage="profile" onNavigate={onNavigate} onLogout={onLogout}>
-      <div className="p-6 lg:p-8 max-w-2xl">
+      <div className="flex-1 flex flex-col justify-between mb-8 p-4">
         <div className="flex items-start justify-between mb-8">
           <div>
             <h1 className="text-2xl font-bold" style={{ color: '#1e1f3a' }}>Profile</h1>
