@@ -158,7 +158,7 @@ export default function ProfilePage({ user, onUpdateUser, onNavigate, onLogout }
               <label className="flex items-center gap-1.5 text-xs font-semibold mb-1.5" style={{ color: '#6b6f9e' }}>
                 <Phone size={13} /> Phone number
               </label>
-              <input type="tel" value={form.phone ?? ''} onChange={set('phone')} disabled={!editing} placeholder={editing ? '+61 4XX XXX XXX' : '—'}
+              <input type="tel" value={form.phone ?? ''} onChange={set('phone')} disabled={!editing} placeholder={editing ? '' : '—'}
                 className={inputClass} style={inputStyle} onFocus={focusFn} onBlur={blurFn} />
             </div>
 
