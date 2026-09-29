@@ -254,7 +254,7 @@ export default function RegisterPage({
                       type="text" 
                       value={studentForm.zID} 
                       onChange={setS("zID")} 
-                      placeholder="S012345"
+                      placeholder="z1234567"
                       className={inputClass} 
                       style={inputStyle} 
                       onFocus={focusFn} 
@@ -266,7 +266,7 @@ export default function RegisterPage({
                       type="email" 
                       value={studentForm.email} 
                       onChange={setS("email")} 
-                      placeholder="you@uni.edu"
+                      placeholder="zID@ad.unsw.edu.au"
                       className={inputClass} 
                       style={inputStyle} 
                       onFocus={focusFn} 
@@ -373,7 +373,7 @@ export default function RegisterPage({
               className="font-semibold" 
               style={{ color: "#9396d4" }}
             >
-              Sign in
+              Log in
             </button>
           </p>
         </div>
