@@ -6,7 +6,7 @@ import { compressImage } from '../../lib/compressImage.ts'
 const CATEGORIES: EvidenceCategory[] = ['Meeting', 'Networking', 'Society Event', 'Workshop', 'Conference', 'Volunteering', 'Other']
 
 interface Props {
-  studentId: string
+  studentId: string | undefined
   studentName: string
   onAdd: (e: Evidence) => void
   onClose: () => void
