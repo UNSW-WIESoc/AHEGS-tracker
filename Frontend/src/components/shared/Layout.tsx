@@ -88,8 +88,8 @@ export default function Layout({ user, currentPage, onNavigate, onLogout, childr
     <div className="min-h-screen flex" style={{ background: '#f5f7fd' }}>
       {/* Desktop sidebar */}
       <aside
-        className="hidden lg:flex flex-col w-60 shrink-0"
-        style={{ background: SIDEBAR_BG, minHeight: '100vh' }}
+        className="hidden lg:flex flex-col fixed left-0 top-0 bottom-0 w-60"
+        style={{ background: SIDEBAR_BG }}
       >
         <SidebarContent />
       </aside>
@@ -115,7 +115,7 @@ export default function Layout({ user, currentPage, onNavigate, onLogout, childr
       )}
 
       {/* Main content */}
-      <main className="flex-1 min-w-0 mt-14 lg:mt-0">
+      <main className="flex-1 min-w-0 mt-14 lg:mt-0 lg:ml-60">
         {children}
       </main>
     </div>
