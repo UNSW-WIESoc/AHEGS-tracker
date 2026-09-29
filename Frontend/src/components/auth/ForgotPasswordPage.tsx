@@ -68,7 +68,7 @@ export default function ForgotPasswordPage({
                 className="text-sm font-semibold"
                 style={{ color: "#9396d4" }}
               >
-                Back to sign in
+                Back to log in
               </button>
             </div>
           ) : (
@@ -78,7 +78,7 @@ export default function ForgotPasswordPage({
                 className="flex items-center gap-1.5 text-sm mb-6"
                 style={{ color: "#9396d4" }}
               >
-                <ArrowLeft size={16} /> Back to sign in
+                <ArrowLeft size={16} /> Back to log in
               </button>
               <h2
                 className="text-2xl font-bold mb-1"
