@@ -5,7 +5,7 @@ import Layout from '../shared/Layout'
 import StatusBadge from '../shared/StatusBadge'
 import EvidencePreviewDialog from '../shared/EvidencePreviewDialog'
 import AddEvidenceDialog from '../shared/AddEvidenceDialog'
-import { Plus, Paperclip, Clock, CheckCircle, XCircle, AlertCircle } from 'lucide-react'
+import { Plus, Paperclip, Clock, CheckCircle, AlertCircle, CircleQuestionMark } from 'lucide-react'
 
 interface Props {
   user: User
@@ -29,8 +29,8 @@ export default function UserDashboard({ user, evidence, onAddEvidence, onNavigat
   const filtered = tab === 'all' ? evidence : evidence.filter(e => e.status === tab)
   const tabs: { key: Tab; label: string; count: number }[] = [
     { key: 'all', label: 'All', count: evidence.length },
-    { key: 'approved', label: 'Approved', count: evidence.filter(e => e.status === 'approved').length },
     { key: 'pending', label: 'Pending', count: evidence.filter(e => e.status === 'pending').length },
+    { key: 'approved', label: 'Approved', count: evidence.filter(e => e.status === 'approved').length },
     { key: 'rejected', label: 'Rejected', count: evidence.filter(e => e.status === 'rejected').length },
   ]
 
@@ -45,23 +45,15 @@ export default function UserDashboard({ user, evidence, onAddEvidence, onNavigat
             </h1>
             <p className="text-sm mt-1" style={{ color: '#6b6f9e' }}>Track your volunteering hours progress</p>
           </div>
-          <button
-            onClick={() => setShowAdd(true)}
-            className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-semibold text-white transition-all hover:opacity-90 active:scale-[0.98]"
-            style={{ background: '#9396d4' }}
-          >
-            <Plus size={16} />
-            Add evidence
-          </button>
         </div>
 
         {/* Stats row */}
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
           {[
             { label: 'Completed', value: `${approvedHours}h`, icon: CheckCircle, color: '#16a34a', bg: '#f0fdf4' },
-            { label: 'Required', value: `${REQUIRED_HOURS}h`, icon: Clock, color: '#9396d4', bg: 'rgba(147,150,212,0.08)' },
-            { label: 'Remaining', value: `${Math.max(REQUIRED_HOURS - approvedHours, 0)}h`, icon: AlertCircle, color: '#d97706', bg: '#fffbeb' },
-            { label: 'Pending', value: `${pendingHours}h`, icon: XCircle, color: '#6b6f9e', bg: '#f5f7fd' },
+            { label: 'Required', value: `${REQUIRED_HOURS}h`, icon: AlertCircle, color: '#c73640', bg: '#ffebeb' },
+            { label: 'Remaining', value: `${Math.max(REQUIRED_HOURS - approvedHours, 0)}h`, icon: CircleQuestionMark, color: '#d97706', bg: '#fffbeb' },
+            { label: 'Pending', value: `${pendingHours}h`, icon: Clock, color: '#6b6f9e', bg: '#f5f7fd' },
           ].map(({ label, value, icon: Icon, color, bg }) => (
             <div key={label} className="rounded-2xl p-4" style={{ background: '#fff', border: '1px solid #eef1fb' }}>
               <div className="flex items-center justify-between mb-2">
@@ -79,7 +71,6 @@ export default function UserDashboard({ user, evidence, onAddEvidence, onNavigat
         <div className="rounded-2xl p-6 mb-6" style={{ background: '#fff', border: '1px solid #eef1fb' }}>
           <div className="flex items-center justify-between mb-3">
             <div>
-              <h2 className="font-semibold text-sm" style={{ color: '#1e1f3a' }}>Progress toward {REQUIRED_HOURS}h target</h2>
               <p className="text-xs mt-0.5" style={{ color: '#6b6f9e' }}>
                 {approvedHours}h completed · {Math.max(REQUIRED_HOURS - approvedHours, 0)}h remaining
               </p>
@@ -107,7 +98,15 @@ export default function UserDashboard({ user, evidence, onAddEvidence, onNavigat
         {/* Evidence table */}
         <div className="rounded-2xl" style={{ background: '#fff', border: '1px solid #eef1fb' }}>
           <div className="flex items-center justify-between px-6 pt-5 pb-0">
-            <h2 className="font-semibold text-sm" style={{ color: '#1e1f3a' }}>Evidence submissions</h2>
+            <h2 className="font-semibold text-md" style={{ color: '#1e1f3a' }}>Evidence submissions</h2>
+            <button
+              onClick={() => setShowAdd(true)}
+              className="flex items-center gap-2 px-4 py-1.5 rounded-xl text-sm font-semibold text-white transition-all hover:opacity-90 active:scale-[0.98]"
+              style={{ background: '#9396d4' }}
+            >
+              <Plus size={16} />
+              Add evidence
+            </button>
           </div>
 
           {/* Tabs */}
