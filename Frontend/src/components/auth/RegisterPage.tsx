@@ -24,10 +24,10 @@ interface Props {
   onRegisterError:() => void;
 }
 
-const TABS: { role: Role; label: string; icon: React.ElementType }[] = [
-  { role: "student", label: "Student", icon: GraduationCap },
-  { role: "mentor",  label: "Mentor",  icon: Users }
-];
+// const TABS: { role: Role; label: string; icon: React.ElementType }[] = [
+//   { role: "student", label: "Student", icon: GraduationCap },
+//   { role: "mentor",  label: "Mentor",  icon: Users }
+// ];
 
 const inputStyle = { border: "1.5px solid #dde2f5", background: "#fff", color: "#1e1f3a" };
 const inputClass = "w-full pl-10 pr-4 py-3 rounded-xl border text-sm outline-none transition-all";
@@ -210,7 +210,7 @@ export default function RegisterPage({
           </p>
 
           {/* Role tabs */}
-          <div className="flex rounded-xl p-1 mb-6" style={{ background: "#eef1fb" }}>
+          {/* <div className="flex rounded-xl p-1 mb-6" style={{ background: "#eef1fb" }}>
             {TABS.map(({ role: r, label, icon: Icon }) => (
               <button key={r} onClick={() => switchRole(r)}
                 className="flex-1 flex items-center justify-center gap-1.5 py-2.5 rounded-lg text-xs font-semibold transition-all"
@@ -223,7 +223,7 @@ export default function RegisterPage({
                 {label}
               </button>
             ))}
-          </div>
+          </div> */}
 
           {error && (
             <div 
@@ -278,7 +278,7 @@ export default function RegisterPage({
             )}
 
             {/* ── Mentor fields ── */}
-            {role === "mentor" && (
+            {/* {role === "mentor" && (
               <>
                 <Field label="Full name" icon={UserIcon}>
                   <input 
@@ -317,7 +317,7 @@ export default function RegisterPage({
                   </Field>
                 </div>
               </>
-            )}
+            )} */}
 
             {/* Shared password field */}
             <div>

@@ -13,9 +13,9 @@ interface Props {
 type Role = "student" | "admin" | "mentor";
 
 const TABS: { role: Role; label: string; icon: React.ElementType; placeholder: string }[] = [
-  { role: "student", label: "Student",  icon: GraduationCap, placeholder: "you@uni.edu" },
-  { role: "mentor",  label: "Mentor",   icon: Users,         placeholder: "mentor@wiesoc.edu" },
-  { role: "admin",   label: "Admin",    icon: Shield,        placeholder: "admin@wiesoc.edu" },
+  { role: "student", label: "Student",  icon: GraduationCap, placeholder: "student@unsw.edu.au" },
+  //{ role: "mentor",  label: "Mentor",   icon: Users,         placeholder: "mentor@wiesoc.edu" },
+  { role: "admin",   label: "Admin",    icon: Shield,        placeholder: "admin@wiesoc.com" },
 ];
 
 export default function LoginPage({
@@ -242,7 +242,7 @@ export default function LoginPage({
               </button>
             </p>
           )}
-          {role === "mentor" && (
+          {/* {role === "mentor" && (
             <p className="text-center mt-6 text-sm" style={{ color: "#6b6f9e" }}>
               New mentor?{" "}
               <button 
@@ -253,7 +253,7 @@ export default function LoginPage({
                 Register here
               </button>
             </p>
-          )}
+          )} */}
         </div>
       </div>
     </div>
