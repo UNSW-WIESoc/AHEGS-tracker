@@ -1,6 +1,6 @@
 import type { Page, User } from '../../types'
 import WiesocLogo from './WiesocLogo'
-import { LayoutDashboard, User as UserIcon, LogOut, Shield, Menu, X } from 'lucide-react'
+import { LayoutDashboard, LogOut, Shield, Menu, X } from 'lucide-react'
 import { useState } from 'react'
 
 interface Props {
@@ -11,7 +11,7 @@ interface Props {
   children: React.ReactNode
 }
 
-const SIDEBAR_BG = 'linear-gradient(180deg, #9396d4 0%, #7e82c8 55%, #8aa4d6 100%)'
+const SIDEBAR_BG = 'linear-gradient(160deg, #9396d4 0%, #a3b5df 100%)'
 
 export default function Layout({ user, currentPage, onNavigate, onLogout, children }: Props) {
   const [mobileOpen, setMobileOpen] = useState(false)
@@ -21,7 +21,6 @@ export default function Layout({ user, currentPage, onNavigate, onLogout, childr
 
   const navItems = [
     { page: dashPage, label: user.role === 'admin' ? 'Admin Panel' : 'Dashboard', icon: user.role === 'admin' ? Shield : LayoutDashboard },
-    { page: 'profile' as Page, label: 'Profile', icon: UserIcon },
   ]
 
   const SidebarContent = () => (
@@ -68,7 +67,17 @@ export default function Layout({ user, currentPage, onNavigate, onLogout, childr
           Sign out
         </button>
 
-        <div className="flex items-center gap-3 px-3 py-3 rounded-xl" style={{ background: 'rgba(255,255,255,0.12)' }}>
+        <button
+          type="button"
+          onClick={() => { onNavigate('profile'); setMobileOpen(false) }}
+          className="flex items-center gap-3 w-full px-3 py-3 rounded-xl text-left transition-all"
+          style={{
+            background: currentPage === 'profile' ? 'rgba(255,255,255,0.22)' : 'rgba(255,255,255,0.12)',
+            boxShadow: currentPage === 'profile' ? 'inset 0 0 0 1px rgba(255,255,255,0.2)' : 'none',
+          }}
+          onMouseEnter={e => { if (currentPage !== 'profile') (e.currentTarget as HTMLElement).style.background = 'rgba(255,255,255,0.18)' }}
+          onMouseLeave={e => { if (currentPage !== 'profile') (e.currentTarget as HTMLElement).style.background = 'rgba(255,255,255,0.12)' }}
+        >
           <div className="w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold shrink-0"
             style={{ background: '#b9d0ee', color: '#1e1f3a' }}>
             {initials}
@@ -79,7 +88,7 @@ export default function Layout({ user, currentPage, onNavigate, onLogout, childr
               {user.role === 'admin' ? 'Administrator' : user.studentId}
             </p>
           </div>
-        </div>
+        </button>
       </div>
     </>
   )
