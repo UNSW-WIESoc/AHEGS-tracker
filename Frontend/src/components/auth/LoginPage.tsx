@@ -13,7 +13,7 @@ interface Props {
 type Role = "student" | "admin" | "mentor";
 
 const TABS: { role: Role; label: string; icon: React.ElementType; placeholder: string }[] = [
-  { role: "student", label: "Student",  icon: GraduationCap, placeholder: "student@unsw.edu.au" },
+  { role: "student", label: "Student",  icon: GraduationCap, placeholder: "zID@ad.unsw.edu.au" },
   //{ role: "mentor",  label: "Mentor",   icon: Users,         placeholder: "mentor@wiesoc.edu" },
   { role: "admin",   label: "Admin",    icon: Shield,        placeholder: "admin@wiesoc.com" },
 ];
@@ -39,12 +39,17 @@ export default function LoginPage({
     setError("");
     setAuthError("");
   };
-
+  const emailRegex = /^z[0-9]{7}@ad\.unsw\.edu\.au$/;
+  const isEmailValid = emailRegex.test(email);
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     if (!email || !password) {
       setError("Please fill in all fields.");
+      return;
+    }
+    if (role === "student" && !isEmailValid) {
+      setError("Please enter a valid UNSW email address (e.g. z1234567@ad.unsw.edu.au).");
       return;
     }
 
@@ -87,25 +92,21 @@ export default function LoginPage({
           <h1 className="text-4xl font-bold leading-tight mb-4">
             Track your
             <br />
-            volunteering journey
+            AHEGS progress
           </h1>
           <p className="text-white/70 text-lg">
             Log events, submit evidence, and watch your progress
-            grow toward your goal.
+            toward your goal.
           </p>
         </div>
         <div className="flex gap-3">
-          {[0, 1, 2].map((i) => (
-            <div
-              key={i}
-              className="h-1.5 rounded-full"
-              style={{
-                width: i === 0 ? 32 : 12,
-                background:
-                  i === 0 ? "white" : "rgba(255,255,255,0.35)",
-              }}
-            />
-          ))}
+          <div
+            className="h-1.5 rounded-full"
+            style={{
+              width: 72,
+              background:"rgba(255,255,255,0.35)",
+            }}
+           />
         </div>
       </div>
 
@@ -122,7 +123,7 @@ export default function LoginPage({
             Welcome back
           </h2>
           <p className="mb-8" style={{ color: "#6b6f9e" }}>
-            Sign in to your WIESOC account
+            Log in to your WIESOC account
           </p>
 
           {/* Role tabs */}
@@ -154,7 +155,7 @@ export default function LoginPage({
             </div>
           )}
 
-          <form onSubmit={submit} className="space-y-4">
+          <form onSubmit={submit} noValidate className="space-y-4">
             <div>
               <label className="block text-sm font-medium mb-1.5" style={{ color: "#1e1f3a" }}>
                 Email address
@@ -169,6 +170,7 @@ export default function LoginPage({
                   type="email" 
                   value={email} 
                   onChange={(e) => setEmail(e.target.value)}
+                  // placeholder="zID@ad.unsw.edu.au"
                   placeholder={current.placeholder}
                   className="w-full pl-10 pr-4 py-3 rounded-xl border text-sm outline-none transition-all"
                   style={{ border: "1.5px solid #dde2f5", background: "#fff", color: "#1e1f3a" }}
@@ -226,7 +228,7 @@ export default function LoginPage({
                   // "linear-gradient(135deg, #9396d4, #7b7fc4)",
               }}
             >
-              Sign in
+              Log in
             </button>
           </form>
 
