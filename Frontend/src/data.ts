@@ -1,6 +1,6 @@
 import type { Evidence, User } from './types'
 
-export const REQUIRED_HOURS = 40
+export const REQUIRED_HOURS = 20
 
 export const MOCK_USERS: User[] = [
   {
