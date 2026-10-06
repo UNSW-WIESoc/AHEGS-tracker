@@ -238,10 +238,9 @@ export default function UserDashboard({ user, evidence, onAddEvidence, onNavigat
             <div className="flex gap-2">
               <button
                 onClick={() => exportEvidenceToPdf(evidence)}
-                className="flex items-center gap-2 px-2 py-1.5 rounded-xl font-semibold transition-all active:scale-[0.98] border hover:bg-[#f2f2fa]"
-                style={{ borderColor: '#9396d4' }}
+                className="flex items-center gap-2 px-2 py-1.5 rounded-xl font-semibold transition-all active:scale-[0.98] hover:bg-[#f2f2fa]"
               >
-                <Download color='#9396d4' size={18} />
+                <Download color='#9396d4' size={20} />
               </button>
               <button
                 onClick={() => setShowAdd(true)}
