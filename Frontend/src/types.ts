@@ -9,13 +9,13 @@ export type Page =
 export type EvidenceStatus = 'pending' | 'approved' | 'rejected'
 
 export type EvidenceCategory =
-  | 'Meeting'
-  | 'Networking'
-  | 'Society Event'
-  | 'Workshop'
-  | 'Conference'
-  | 'Volunteering'
-  | 'Other'
+  | 'Weekly Meetings'
+  | 'Training Workshop (/2)'
+  | 'OC (/2)'
+  | 'CP1 (/2)'
+  | 'CP2 (/2)'
+  | 'CC (/2)'
+  | 'Reflection for ms (0.5hr each)'
 
 export interface Evidence {
   id: string
