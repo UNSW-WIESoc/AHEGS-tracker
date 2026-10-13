@@ -138,9 +138,10 @@ export default function App() {
         }
 
         const querySnapshot = await getDocs(q)
+        // doc.id goes last so a stray `id` field stored in the data can't override it
         const loadedEvidence = querySnapshot.docs.map(doc => ({
-          id: doc.id,
-          ...doc.data()
+          ...doc.data(),
+          id: doc.id
         })) as Evidence[]
 
         setEvidence(loadedEvidence)
@@ -168,16 +169,22 @@ export default function App() {
   }
 
   // 4. Handle status updates (admin approving/rejecting a submission)
-  const handleUpdateEvidence = async (updatedList: Evidence[]) => {
-    setEvidence(updatedList)
+  // Only the changed fields of the changed doc are written, so the update is a
+  // single small write rather than a rewrite of every evidence doc.
+  const handleUpdateEvidence = async (
+    id: string,
+    changes: Pick<Evidence, 'status'> & Partial<Pick<Evidence, 'rejectionReason'>>
+  ) => {
+    const previous = evidence
+    setEvidence((prev) => prev.map((e) => (e.id === id ? { ...e, ...changes } : e)))
 
     try {
-      for (const item of updatedList) {
-        const docRef = doc(db, 'evidence', item.id)
-        await updateDoc(docRef, { ...item })
-      }
+      await updateDoc(doc(db, 'evidence', id), changes)
     } catch (error) {
       console.error("Error updating evidence in Firestore:", error)
+      // Roll back so the UI doesn't show a status that wasn't saved
+      setEvidence(previous)
+      alert(`Failed to save status change (${(error as any)?.code ?? 'unknown error'}). Please try again.`)
     }
   }
 
