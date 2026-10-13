@@ -1,5 +1,5 @@
-import { useState, useEffect } from 'react'
-import type { Page, User, Evidence } from './types'
+import { useState, useEffect, useRef } from 'react'
+import type { Page, User, Evidence, Role } from './types'
 import LoginPage from './components/auth/LoginPage'
 import RegisterPage from './components/auth/RegisterPage'
 import ForgotPasswordPage from './components/auth/ForgotPasswordPage'
@@ -40,42 +40,68 @@ function getLoginErrorMessage(error: any): string {
 }
 
 export default function App() {
-  const [page, setPage] = useState<Page>('login')
-  const [currentUser, setCurrentUser] = useState<User | null>(null)
-  const [evidence, setEvidence] = useState<Evidence[]>([])
-  const [loading, setLoading] = useState(true)
+  const [page, setPage] = useState<Page>('login');
+  const [currentUser, setCurrentUser] = useState<User | null>(null);
+  const [evidence, setEvidence] = useState<Evidence[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [authError, setAuthError] = useState<string>('');
 
-  const navigate = (p: Page) => setPage(p)
+  // Tracks which role the user selected on the login form, so the auth-state 
+  // listener can validate it once sign-in completes.
+  const pendingRoleRef = useRef<Role | null>(null)
+  // track registering so the auth-state listener can validate it once account 
+  // creation completes.
+  const isRegisteringRef = useRef(false)
+
+  const navigate = (p: Page) => setPage(p);
+  
 
   // 1. Listen for Authentication Changes
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
       try {
         if (firebaseUser) {
+          // Registration is handling its own sign-up flow — let it finish.
+          if (isRegisteringRef.current) {
+            setLoading(false)
+            return
+          }
           const userDocRef = doc(db, 'users', firebaseUser.uid)
           const userDocSnap = await getDoc(userDocRef)
 
           if (userDocSnap.exists()) {
             const profile = userDocSnap.data() as User
+
+            if (pendingRoleRef.current !== null) {
+              const expectedRole = pendingRoleRef.current
+              pendingRoleRef.current = null
+
+              if (profile.role !== expectedRole) {
+                await signOut(auth)
+                setCurrentUser(null)
+                setEvidence([])
+                setPage('login')
+                setAuthError(
+                  `This account isn't registered as a ${expectedRole}. Please select the correct tab.`
+                )
+                setLoading(false)
+                return
+              }
+            }
+
+            setAuthError('')
             setCurrentUser(profile)
             setPage(profile.role === 'admin' ? 'admin' : 'dashboard')
           } else {
-            // First-time sign-in: auto-create their profile
-            const studentZid = firebaseUser.email?.split('@')[0] || firebaseUser.uid.substring(0, 8)
-
-            const defaultProfile: User = {
-              id: firebaseUser.uid,
-              email: firebaseUser.email || '',
-              fullName: firebaseUser.displayName || 'New Student',
-              role: 'student',
-              studentId: studentZid,
-              degree: '',
-              yearOfStudy: 1,
-            }
-
-            await setDoc(userDocRef, defaultProfile)
-            setCurrentUser(defaultProfile)
-            setPage('dashboard')
+            // No profile doc found, something went wrong
+            await signOut(auth)
+            setCurrentUser(null)
+            setEvidence([])
+            setPage('login')
+            pendingRoleRef.current = null
+            setAuthError('No account record found. Please register or contact support.')
+            setLoading(false)
+            return
           }
         } else {
           setCurrentUser(null)
@@ -89,7 +115,7 @@ export default function App() {
       }
     })
 
-    return () => unsubscribe()
+    return () => unsubscribe();
   }, [])
 
   // 2. Fetch evidence logs from Firestore when logged in
@@ -156,11 +182,16 @@ export default function App() {
   }
 
   // Handle password login
-  const handleLogin = async (email: string, password: string) => {
+  const handleLogin = async (email: string, password: string, role: Role) => {
+    pendingRoleRef.current = role // tell the listener what role to expect
+    setAuthError('')
     try {
       await signInWithEmailAndPassword(auth, email, password)
     } catch (error: any) {
-      throw new Error(getLoginErrorMessage(error))
+      pendingRoleRef.current = null
+      const message = getLoginErrorMessage(error)
+      setAuthError(message)
+      throw new Error(message)
     }
   }
 
@@ -176,15 +207,34 @@ export default function App() {
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-[#f0f2fc]">
-        <p className="text-[#9396d4] font-semibold animate-pulse">Loading WIESOC AHEGS Tracker...</p>
+        <p className="text-[#9396d4] font-semibold animate-pulse">
+          Loading WIESOC AHEGS Tracker...
+        </p>
       </div>
     )
   }
 
   if (!currentUser) {
-    if (page === 'register') return <RegisterPage onLogin={() => navigate('login')} onNavigate={navigate} />
-    if (page === 'forgot-password') return <ForgotPasswordPage onNavigate={navigate} />
-    return <LoginPage onLogin={handleLogin} onNavigate={navigate} />
+    if (page === 'register') 
+      return <RegisterPage 
+        onNavigate={navigate} 
+        onRegisterStart={() => { isRegisteringRef.current = true }}
+        onRegisterComplete={(profile: User) => {
+          isRegisteringRef.current = false
+          setCurrentUser(profile)
+          setPage(profile.role === 'admin' ? 'admin' : 'dashboard')
+        }}
+        onRegisterError={() => { isRegisteringRef.current = false }}
+      />
+    if (page === 'forgot-password') 
+      return <ForgotPasswordPage onNavigate={navigate} />
+    
+    return <LoginPage 
+      onLogin={handleLogin} 
+      onNavigate={navigate} 
+      authError={authError} 
+      setAuthError={setAuthError} 
+    />
   }
 
   if (page === 'profile') {

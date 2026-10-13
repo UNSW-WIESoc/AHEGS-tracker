@@ -19,7 +19,7 @@ export type EvidenceCategory =
 
 export interface Evidence {
   id: string
-  studentId: string
+  studentId: string | undefined
   studentName: string
   eventName: string
   eventDate: string
@@ -35,12 +35,16 @@ export interface Evidence {
 export interface User {
   id: string
   fullName: string
-  studentId: string
+  studentId?: string
   email: string
-  degree: string
-  yearOfStudy: number
-  role: 'student' | 'admin'
+  degree?: string
+  yearOfStudy?: number
+  role: 'student' | 'admin' | 'mentor'
+  expertise?: string
+  company?: string
   avatar?: string
   bio?: string
   phone?: string
 }
+
+export type Role = "student" | "admin" | "mentor";
