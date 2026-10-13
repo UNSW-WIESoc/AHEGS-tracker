@@ -2,6 +2,8 @@ import { useState, useRef } from 'react'
 import type { Page, User } from '../../types'
 import Layout from '../shared/Layout'
 import { Camera, Edit2, Save, X, User as UserIcon, Hash, Mail, Phone, GraduationCap, BookOpen, FileText } from 'lucide-react'
+import { doc, setDoc } from 'firebase/firestore'
+import { db } from "../../firebase";
 
 interface Props {
   user: User
@@ -41,8 +43,15 @@ export default function ProfilePage({ user, onUpdateUser, onNavigate, onLogout }
   const set = (k: keyof typeof form) => (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) =>
     setForm(f => ({ ...f, [k]: e.target.value }))
 
-  const save = () => {
-    onUpdateUser({ ...form, avatar: avatarUrl ?? undefined })
+  const save = async () => {
+    try {
+      const userDocRef = doc(db, 'users', form.id)
+      await setDoc(userDocRef, form, { merge: true })
+      onUpdateUser({ ...form, avatar: avatarUrl ?? undefined })
+    } catch (error) {
+      console.error("Error updating user profile in Firestore:", error)
+      // optionally surface an error to the user here
+    }
     setEditing(false)
   }
 
