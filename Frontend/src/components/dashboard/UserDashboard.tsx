@@ -5,7 +5,8 @@ import Layout from '../shared/Layout'
 import StatusBadge from '../shared/StatusBadge'
 import EvidencePreviewDialog from '../shared/EvidencePreviewDialog'
 import AddEvidenceDialog from '../shared/AddEvidenceDialog'
-import { Plus, Paperclip, Clock, CheckCircle, AlertCircle, CircleQuestionMark } from 'lucide-react'
+import { Plus, Paperclip, Clock, CheckCircle, AlertCircle, CircleQuestionMark, Download } from 'lucide-react'
+import jsPDF from 'jspdf'
 
 interface Props {
   user: User
@@ -33,6 +34,141 @@ export default function UserDashboard({ user, evidence, onAddEvidence, onNavigat
     { key: 'approved', label: 'Approved', count: evidence.filter(e => e.status === 'approved').length },
     { key: 'rejected', label: 'Rejected', count: evidence.filter(e => e.status === 'rejected').length },
   ]
+
+  const STATUS_COLORS: Record<string, [number, number, number]> = {
+    approved: [22, 163, 74],
+    rejected: [185, 28, 28],
+    pending: [217, 119, 6],
+  }
+
+  // Pulls the image format (PNG/JPEG) out of a base64 data URL
+  function getImageFormat(dataUrl: string): 'PNG' | 'JPEG' | null {
+    const match = dataUrl.match(/^data:image\/(png|jpeg|jpg)/i)
+    if (!match) return null
+    return match[1].toLowerCase() === 'png' ? 'PNG' : 'JPEG'
+  }
+
+  // Reads an image's natural pixel dimensions so we can scale it into the PDF 
+  // page without distorting the aspect ratio.
+  function getImageDimensions(dataUrl: string): Promise<{ width: number; height: number }> {
+    return new Promise((resolve, reject) => {
+      const img = new Image()
+      img.onload = () => resolve({ width: img.naturalWidth, height: img.naturalHeight })
+      img.onerror = reject
+      img.src = dataUrl
+    })
+  }
+
+  async function exportEvidenceToPdf(evidence: Evidence[], title = 'Evidence Report') {
+    const docPdf = new jsPDF()
+    const pageWidth = docPdf.internal.pageSize.getWidth()
+    const pageHeight = docPdf.internal.pageSize.getHeight()
+    const margin = 14
+    const contentWidth = pageWidth - margin * 2
+
+    for (let i = 0; i < evidence.length; i++) {
+      const e = evidence[i]
+      if (i > 0) docPdf.addPage()
+
+      let y = 20
+
+      // Header
+      docPdf.setFontSize(16)
+      docPdf.setTextColor(30)
+      docPdf.text(title, margin, y)
+      y += 6
+      docPdf.setFontSize(9)
+      docPdf.setTextColor(120)
+      docPdf.setFont('helvetica', 'normal')
+      docPdf.text(`Evidence ${i + 1} of ${evidence.length} — Downloaded ${new Date().toLocaleDateString()}`, margin, y)
+      y += 10
+
+      // Divider
+      docPdf.setDrawColor(220)
+      docPdf.line(margin, y, pageWidth - margin, y)
+      y += 10
+
+      // Student / event details
+      const fields: [string, string][] = [
+        ['Student', e.studentName],
+        ['zID', e.studentId],
+        ['Event', e.eventName],
+        ['Event date', new Date(e.eventDate).toLocaleDateString()],
+        ['Hours', e.hours.toString()],
+        ['Category', e.category],
+        ['Submitted', new Date(e.submittedAt).toLocaleDateString()],
+      ]
+
+      docPdf.setFontSize(10)
+      fields.forEach(([label, value]) => {
+        docPdf.setTextColor(100)
+        docPdf.setFont('helvetica', 'bold')
+        docPdf.text(`${label}:`, margin, y)
+        docPdf.setTextColor(30)
+        docPdf.setFont('helvetica', 'normal')
+        docPdf.text(value, margin + 35, y)
+        y += 7
+      })
+
+      // Status (color-coded)
+      docPdf.setTextColor(100)
+      docPdf.setFont('helvetica', 'bold')
+      docPdf.text('Status:', margin, y)
+      const statusColor = STATUS_COLORS[e.status] ?? [30, 30, 30]
+      docPdf.setTextColor(...statusColor)
+      docPdf.setFont('helvetica', 'bold')
+      docPdf.text(e.status.toUpperCase(), margin + 35, y)
+      docPdf.setFont('helvetica', 'normal')
+      y += 10
+
+      // Rejection reason, if present
+      if (e.status === 'rejected' && e.rejectionReason) {
+        docPdf.setTextColor(185, 28, 28)
+        docPdf.setFontSize(9)
+        const reasonLines = docPdf.splitTextToSize(`Rejection reason: ${e.rejectionReason}`, contentWidth)
+        docPdf.text(reasonLines, margin, y)
+        y += reasonLines.length * 5 + 6
+      }
+
+      y += 4
+      docPdf.setDrawColor(220)
+      docPdf.line(margin, y, pageWidth - margin, y)
+      y += 10
+
+      // Embedded evidence image
+      docPdf.setFontSize(10)
+      docPdf.setTextColor(100)
+      docPdf.setFont('helvetica', 'bold')
+      docPdf.text('Evidence:', margin, y)
+      y += 6
+
+      const format = getImageFormat(e.evidenceFile)
+      if (format) {
+        try {
+          const { width: imgW, height: imgH } = await getImageDimensions(e.evidenceFile)
+          const maxW = contentWidth
+          const maxH = pageHeight - y - margin
+
+          // Scale to fit within available space, preserving aspect ratio
+          const scale = Math.min(maxW / imgW, maxH / imgH, 1)
+          const drawW = imgW * scale
+          const drawH = imgH * scale
+
+          docPdf.addImage(e.evidenceFile, format, margin, y, drawW, drawH)
+        } catch (err) {
+          docPdf.setFontSize(9)
+          docPdf.setTextColor(185, 28, 28)
+          docPdf.text('(Could not load evidence image)', margin, y)
+        }
+      } else {
+        docPdf.setFontSize(9)
+        docPdf.setTextColor(150)
+        docPdf.text('(No valid image data for this record)', margin, y)
+      }
+    }
+
+    docPdf.save(`evidence-summary-report.pdf`)
+  }
 
   return (
     <Layout user={user} currentPage="dashboard" onNavigate={onNavigate} onLogout={onLogout}>
@@ -99,14 +235,22 @@ export default function UserDashboard({ user, evidence, onAddEvidence, onNavigat
         <div className="rounded-2xl" style={{ background: '#fff', border: '1px solid #eef1fb' }}>
           <div className="flex items-center justify-between px-6 pt-5 pb-0">
             <h2 className="font-semibold text-md" style={{ color: '#1e1f3a' }}>Evidence submissions</h2>
-            <button
-              onClick={() => setShowAdd(true)}
-              className="flex items-center gap-2 px-4 py-1.5 rounded-xl text-sm font-semibold text-white transition-all hover:opacity-90 active:scale-[0.98]"
-              style={{ background: '#9396d4' }}
-            >
-              <Plus size={16} />
-              Add evidence
-            </button>
+            <div className="flex gap-2">
+              <button
+                onClick={() => exportEvidenceToPdf(evidence)}
+                className="flex items-center gap-2 px-2 py-1.5 rounded-xl font-semibold transition-all active:scale-[0.98] hover:bg-[#f2f2fa]"
+              >
+                <Download color='#9396d4' size={20} />
+              </button>
+              <button
+                onClick={() => setShowAdd(true)}
+                className="flex items-center gap-2 px-4 py-1.5 rounded-xl text-sm font-semibold text-white transition-all hover:opacity-90 active:scale-[0.98]"
+                style={{ background: '#9396d4' }}
+              >
+                <Plus size={16} />
+                Add evidence
+              </button>
+            </div>
           </div>
 
           {/* Tabs */}
