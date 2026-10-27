@@ -3,7 +3,7 @@ import type { Evidence, EvidenceCategory } from '../../types'
 import { X, Upload, Calendar, Clock, Tag, FileText } from 'lucide-react'
 import { compressImage } from '../../lib/compressImage.ts'
 
-const CATEGORIES: EvidenceCategory[] = ['Meeting', 'Networking', 'Society Event', 'Workshop', 'Conference', 'Volunteering', 'Other']
+const CATEGORIES: EvidenceCategory[] = ['Weekly Meetings', 'Training Workshop (/2)', 'OC (/2)', 'CP1 (/2)', 'CP2 (/2)', 'CC (/2)', 'Reflection for ms (0.5hr each)']
 
 interface Props {
   studentId: string | undefined

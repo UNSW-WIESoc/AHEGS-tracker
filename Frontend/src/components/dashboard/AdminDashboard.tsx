@@ -8,7 +8,10 @@ import { Check, X, Paperclip, Clock, CheckCircle, XCircle, AlertCircle } from 'l
 interface Props {
   user: User
   evidence: Evidence[]
-  onUpdateEvidence: (ev: Evidence[]) => void
+  onUpdateEvidence: (
+    id: string,
+    changes: Pick<Evidence, 'status'> & Partial<Pick<Evidence, 'rejectionReason'>>
+  ) => void
   onNavigate: (p: Page) => void
   onLogout: () => void
 }
@@ -22,12 +25,12 @@ export default function AdminDashboard({ user, evidence, onUpdateEvidence, onNav
   const [rejectReason, setRejectReason] = useState('')
 
   const approve = (ev: Evidence) => {
-    onUpdateEvidence(evidence.map(e => e.id === ev.id ? { ...e, status: 'approved' } : e))
+    onUpdateEvidence(ev.id, { status: 'approved' })
   }
 
   const reject = () => {
     if (!rejectTarget) return
-    onUpdateEvidence(evidence.map(e => e.id === rejectTarget.id ? { ...e, status: 'rejected', rejectionReason: rejectReason } : e))
+    onUpdateEvidence(rejectTarget.id, { status: 'rejected', rejectionReason: rejectReason })
     setRejectTarget(null)
     setRejectReason('')
   }
