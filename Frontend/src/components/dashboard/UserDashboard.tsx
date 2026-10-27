@@ -316,7 +316,7 @@ export default function UserDashboard({ user, evidence, onAddEvidence, onNavigat
 
       {preview && (
         <EvidencePreviewDialog
-          filename={preview.evidenceFile} 
+          filename={preview.eventName}
           fileType="image"
           imageData={preview.evidenceFile}
           onClose={() => setPreview(null)}
