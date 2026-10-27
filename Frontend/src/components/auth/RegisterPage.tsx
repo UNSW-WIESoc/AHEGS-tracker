@@ -104,6 +104,7 @@ export default function RegisterPage({
     onRegisterStart();
     if (role === "student") {
       const { fullName, zID, email, password } = studentForm;
+      const emailZid = email.split('@')[0];
       if (!fullName || !zID || !email || !password) { 
         setError("Please fill in all fields."); 
         return; 
@@ -111,6 +112,10 @@ export default function RegisterPage({
       if (password.length < 8) { 
         setError("Password must be at least 8 characters."); 
         return; 
+      }
+      if (zID != emailZid) {
+        setError("zID must match email.");
+        return;
       }
     } else {
       const { fullName, email, password } = mentorForm;
