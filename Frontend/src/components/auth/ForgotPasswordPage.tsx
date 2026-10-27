@@ -112,7 +112,7 @@ export default function ForgotPasswordPage({
                       type="email"
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
-                      placeholder="you@uni.edu"
+                      placeholder="zID@ad.unsw.edu.au"
                       className="w-full pl-10 pr-4 py-3 rounded-xl border text-sm outline-none transition-all"
                       style={{
                         border: "1.5px solid #dde2f5",
